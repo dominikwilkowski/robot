@@ -1,5 +1,3 @@
-use std::println;
-
 enum Dir {
 	N,
 	W,
@@ -20,9 +18,9 @@ impl Wearhouse {
 
 	fn draw(&self) {
 		println!("┌{:─^width$}┐", "", width = &self.size.0.into());
-		for row in 0..self.size.1.into() {
+		for row in 0..self.size.1 {
 			print!("│");
-			for col in 0..self.size.0.into() {
+			for col in 0..self.size.0 {
 				if self.position.0 == row && self.position.1 == col {
 					print!("X");
 				} else {
@@ -48,31 +46,33 @@ impl Wearhouse {
 				}
 			}
 			Dir::E => {
-				if self.position.1 != self.size.1 {
+				if self.position.1 != self.size.1 - 1 {
 					self.position.1 += 1;
 				}
 			}
 			Dir::S => {
-				if self.position.0 != self.size.0 {
+				if self.position.0 != self.size.0 - 1 {
 					self.position.0 += 1;
 				}
 			}
 		}
 	}
+
+	fn batch(&mut self, instructions: String) {
+		instructions.split(' ').for_each(|movement| match movement.to_uppercase().as_str() {
+			"N" => self.moving(Dir::N),
+			"W" => self.moving(Dir::W),
+			"E" => self.moving(Dir::E),
+			"S" => self.moving(Dir::S),
+			_ => {}
+		});
+	}
 }
 
 fn main() {
-	let mut my_wearhouse = Wearhouse::new((2, 2), (10, 10));
+	let mut my_wearhouse = Wearhouse::new((9, 0), (10, 10));
 	my_wearhouse.draw();
-	my_wearhouse.moving(Dir::N);
-	my_wearhouse.draw();
-	my_wearhouse.moving(Dir::S);
-	my_wearhouse.draw();
-	my_wearhouse.moving(Dir::W);
-	my_wearhouse.draw();
-	my_wearhouse.moving(Dir::W);
-	my_wearhouse.draw();
-	my_wearhouse.moving(Dir::E);
+	my_wearhouse.batch(String::from("N E N E N E N E"));
 	my_wearhouse.draw();
 }
 
@@ -123,11 +123,11 @@ mod testing {
 		my_wearhouse.moving(Dir::S);
 		assert_eq!(my_wearhouse.position, (9, 5));
 		my_wearhouse.moving(Dir::S);
-		assert_eq!(my_wearhouse.position, (10, 5));
+		assert_eq!(my_wearhouse.position, (9, 5));
 		my_wearhouse.moving(Dir::S);
-		assert_eq!(my_wearhouse.position, (10, 5));
+		assert_eq!(my_wearhouse.position, (9, 5));
 		my_wearhouse.moving(Dir::S);
-		assert_eq!(my_wearhouse.position, (10, 5));
+		assert_eq!(my_wearhouse.position, (9, 5));
 	}
 
 	#[test]
@@ -161,10 +161,17 @@ mod testing {
 		my_wearhouse.moving(Dir::E);
 		assert_eq!(my_wearhouse.position, (5, 9));
 		my_wearhouse.moving(Dir::E);
-		assert_eq!(my_wearhouse.position, (5, 10));
+		assert_eq!(my_wearhouse.position, (5, 9));
 		my_wearhouse.moving(Dir::E);
-		assert_eq!(my_wearhouse.position, (5, 10));
+		assert_eq!(my_wearhouse.position, (5, 9));
 		my_wearhouse.moving(Dir::E);
-		assert_eq!(my_wearhouse.position, (5, 10));
+		assert_eq!(my_wearhouse.position, (5, 9));
+	}
+
+	#[test]
+	fn batching() {
+		let mut my_wearhouse = Wearhouse::new((9, 0), (10, 10));
+		my_wearhouse.batch(String::from("N E N E N E N E"));
+		assert_eq!(my_wearhouse.position, (5, 4));
 	}
 }
