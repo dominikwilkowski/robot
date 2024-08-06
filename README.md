@@ -1,14 +1,13 @@
-```sh
- ╦═╗ ╔═╗ ╔╗  ╔═╗ ╔╦╗
- ╠╦╝ ║ ║ ╠╩╗ ║ ║  ║
- ╩╚═ ╚═╝ ╚═╝ ╚═╝  ╩
-```
+CODE CHALLENGE
+==============
 
-## Task
+## The task
 
-We have installed a robot in our warehouse and now we need to be able to send commands to control it. We need you to implement the primary control mechanism.
+We have installed a robot in our warehouse and now we need to be able to send commands to control it.
+We need you to implement the primary control mechanism.
 
-For convenience the robot moves along a grid in the roof of the warehouse and we've made sure that all of our warehouses are built so that the dimensions of the grid are 10 by 10. We've also made sure that all our warehouses are aligned along north-south and east-west axes.
+For convenience the robot moves along a grid in the roof of the warehouse and we've made sure that all of our warehouses are built so that the dimensions of the grid are 10 by 10.
+We've also made sure that all our warehouses are aligned along north-south and east-west axes.
 
 All of the commands to the robot consist of a single capital letter and different commands are delineated by whitespace.
 
@@ -19,10 +18,10 @@ All of the commands to the robot consist of a single capital letter and differen
 
 The robot should accept the following commands:
 
-* N move north
-* W move west
-* E move east
-* S move south
+* `N` move north
+* `W` move west
+* `E` move east
+* `S` move south
 
 ### Example command sequences
 
@@ -36,9 +35,9 @@ If the robot starts in the south-west corner of the warehouse then the following
 
 ```rust
 fn main() {
-	let mut my_wearhouse = Wearhouse::new((5, 4), (10, 10));
-	my_wearhouse.draw();
-	my_wearhouse.batch(String::from("N E W S"));
-	my_wearhouse.draw();
+	let mut my_wearhouse = Wearhouse::new(Size(10, 10), Position(9, 0));
+	println!("{}", my_wearhouse.visualize());
+	my_wearhouse.batch_moving("N E N E N E N E");
+	println!("{}", my_wearhouse.visualize());
 }
 ```
